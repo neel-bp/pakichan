@@ -1,7 +1,7 @@
 import os
 import secrets
 from PIL import Image
-from flask import render_template, url_for, flash, redirect, request, abort
+from flask import render_template, url_for, flash, redirect, request
 from flaskblog import app, db
 from flaskblog.forms import (PostForm, SubPostForm)
 from flaskblog.models import Post, SubPost
