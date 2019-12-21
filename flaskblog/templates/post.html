@@ -6,18 +6,21 @@
   <article class="media content-section">
     <div class="media-body">
       <div class="article-metadata">
-        <div class="mr-2">{{ post.id }}</div>
+        <span class="mr-2">No.{{ post.id }}</span>
+        <span class="mr-2">{{ post.name }}</span>
         <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
       </div>
       <h2 class="article-title">{{ post.title }}</h2>
       <p class="article-content">{{ post.content }}</p>
     </div>
   </article>
+  
   {% for subpost in subposts %}
   <article class="media content-section">
     <div class="media-body">
       <div class="article-metadata">
-        <div class="mr-2">{{ subpost.id }}</div>
+        <span class="mr-2">No.{{ subpost.id }}</span>
+        <span class="mr-2">{{ subpost.name }}</span>
         <small class="text-muted">{{ subpost.date_posted.strftime('%Y-%m-%d') }}</small>
       </div>
       <p class="article-content">{{ subpost.content }}</p>
@@ -25,5 +28,6 @@
   </article>
    
   {% endfor %}
+  
       
 {% endblock content %}

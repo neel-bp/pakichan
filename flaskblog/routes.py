@@ -3,15 +3,20 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
 from flaskblog import app, db
-from flaskblog.forms import (PostForm, SubPostForm)
-from flaskblog.models import Post, SubPost
+from flaskblog.forms import PostForm, SubPostForm
+from flaskblog.models import Post  # SubPost
 
 
 @app.route("/")
 @app.route("/home")
 def home():
-    page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
+    posts=[]
+    for i in Post.query.order_by(Post.date_posted.desc()).all():
+        if i.parent is None and i not in posts:
+            posts.append(i)
+        elif i.parent is not None and i.parent not in posts:
+            posts.append(i.parent)
+
     return render_template('home.html', posts=posts)
 
 
@@ -39,7 +44,8 @@ def save_picture(form_picture):
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data)
+        ip = request.environ['REMOTE_ADDR']
+        post = Post(title=form.title.data, content=form.content.data,ip=ip, name=form.name.data)
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
@@ -52,7 +58,7 @@ def new_post():
 def post(post_id):
     thread_id = post_id
     post = Post.query.get_or_404(post_id)
-    subposts = SubPost.query.filter(SubPost.post_id == thread_id).all()
+    subposts = Post.query.filter(Post.parent_id == thread_id).all()
     return render_template('post.html', title=post.title, post=post, subposts=subposts)
 
 
@@ -91,12 +97,14 @@ def new_subpost(post_id):
     redirectpostid=post_id
     form = SubPostForm()
     if form.validate_on_submit():
-        subpost = SubPost(content=form.content.data, post_id=post_id)
+        ip = request.environ['REMOTE_ADDR']
+        subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=form.name.data)
         db.session.add(subpost)
         db.session.commit()
         flash('Your subpost has been created!', 'success')
         return redirect(url_for('post', post_id=redirectpostid))
     return render_template('create_subpost.html', form=form)
+
 
 
 # @app.route("/post/<int:post_id>/subpost/<int:subpost_id>/update", methods=['GET', 'POST'])

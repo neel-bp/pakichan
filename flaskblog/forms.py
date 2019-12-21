@@ -5,10 +5,12 @@ from wtforms.validators import DataRequired
 
 
 class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
+    name = StringField('Name')
+    title = StringField('Title')
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
 
 class SubPostForm(FlaskForm):
+    name = StringField('Name')
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
