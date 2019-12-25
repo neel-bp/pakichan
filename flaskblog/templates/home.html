@@ -1,17 +1,23 @@
 {% extends "layout.html" %}
 {% block content %}
     {% for post in posts %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a href="{{ url_for('post', post_id=post.id) }}">No.{{ post.id }}</a>
-              <span class="mr-2">{{ post.name }}</span>
-              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+    
+        <article class="media thread">
+          <img class="px-2 py-2 image_thread" src="https://via.placeholder.com/1280x720">
+          <div class="thread-metadata">
+            <small class="title_thread">{{post.title}}</small>
+            <small class="name_thread">{{post.name}}</small>
+            <small class="text-muted date_thread">{{ post.date_posted.strftime('%d/%m/%y(%a)%H:%M:%S') }}</small>
+            <a href="{{ url_for('post', post_id=post.id) }}"><small class="id_thread">No.{{post.id}}</small></a><br>
             </div>
-            <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
-          </div>
+            <p class="content_thread">{{post.content}}</p>
         </article>
+          <div class="col-sm-1">
+             <span>&nbsp;</span>
+          </div>
+          <hr style="margin-top: 0px; margin-top: 0px; border-top: 1px solid #b7c5d9;">
+          
+
     {% endfor %}
 
 {% endblock content %}

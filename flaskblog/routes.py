@@ -45,7 +45,10 @@ def new_post():
     form = PostForm()
     if form.validate_on_submit():
         ip = request.environ['REMOTE_ADDR']
-        post = Post(title=form.title.data, content=form.content.data,ip=ip, name=form.name.data)
+        if form.name.data == '':
+            post = Post(title=form.title.data, content=form.content.data,ip=ip, name='Anonymous')
+        else:
+            post = Post(title=form.title.data, content=form.content.data,ip=ip, name=form.name.data)
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
@@ -98,7 +101,10 @@ def new_subpost(post_id):
     form = SubPostForm()
     if form.validate_on_submit():
         ip = request.environ['REMOTE_ADDR']
-        subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=form.name.data)
+        if form.name.data == '':
+            subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name='Anonymous')
+        else:
+            subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=form.name.data)
         db.session.add(subpost)
         db.session.commit()
         flash('Your subpost has been created!', 'success')

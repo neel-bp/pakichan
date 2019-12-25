@@ -83,3 +83,71 @@ a.article-title:hover {
   color: #428bca;
   text-decoration: none;
 }
+
+.image_thread {
+  float: left;
+  max-width: 250px;
+  max-height: 221px;
+  width: auto;
+  height: auto;
+}
+.thread-metadata {
+  padding-top: 4px;
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+}
+.thread {
+	display:block;
+}
+.name_thread {
+	font-size: 10pt;
+	font-weight: bold;
+	color: green;
+}
+.title_thread {
+	font-size: 10pt;
+	font-weight: bold;
+	color: blue;
+}
+.date_thread {
+	font-size: 10pt;	
+}
+.id_thread{
+	font-size: 10pt;
+}
+.content_thread {
+	font-size: 10pt;
+	white-space: pre-line;
+}
+.post {
+  display: block;
+  background-color: #d6daf0;
+	border: 5px solid #b7c5d9;
+	/* border-top: none;
+  border-left: none; */
+  margin-bottom: 5px;
+}
+.image_post {
+  float: left;
+  max-width: 150px;
+  max-height: 110px;
+  width: auto;
+  height: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.post-metadata {
+  /* padding-bottom: 1px;
+  margin-bottom: 4px; */
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-top: 0px;
+}
+.content_post {
+  margin-bottom: 15px;
+  margin-top: 15px;
+  /* padding-left: 0px; */
+	word-wrap: all;
+  font-size: 10pt;
+  white-space: pre-line;
+}
