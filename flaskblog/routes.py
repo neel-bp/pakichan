@@ -12,10 +12,19 @@ from flaskblog.models import Post  # SubPost
 def home():
     posts=[]
     for i in Post.query.order_by(Post.date_posted.desc()).all():
-        if i.parent is None and i not in posts:
-            posts.append(i)
-        elif i.parent is not None and i.parent not in posts:
-            posts.append(i.parent)
+        thread_n_posts=[]
+        if i.parent is None and i not in [q for w in posts for q in w]:
+            thread_n_posts.append(i)
+            subposts = Post.query.filter(Post.parent_id == i.id).all()[-5:]
+            for j in subposts:
+                thread_n_posts.append(j)
+            posts.append(thread_n_posts)
+        elif i.parent is not None and i.parent not in [q for w in posts for q in w]:
+            thread_n_posts.append(i.parent)
+            subposts = Post.query.filter(Post.parent_id == i.parent.id).all()[-5:]
+            for k in subposts:
+                thread_n_posts.append(k)
+            posts.append(thread_n_posts)
 
     return render_template('home.html', posts=posts)
 

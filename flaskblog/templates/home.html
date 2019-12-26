@@ -1,17 +1,34 @@
 {% extends "layout.html" %}
 {% block content %}
     {% for post in posts %}
-    
+      {% for p in post %}
+       {% if post.index(p) == 0 %}
         <article class="media thread">
           <img class="px-2 py-2 image_thread" src="https://via.placeholder.com/1280x720">
           <div class="thread-metadata">
-            <small class="title_thread">{{post.title}}</small>
-            <small class="name_thread">{{post.name}}</small>
-            <small class="text-muted date_thread">{{ post.date_posted.strftime('%d/%m/%y(%a)%H:%M:%S') }}</small>
-            <a href="{{ url_for('post', post_id=post.id) }}"><small class="id_thread">No.{{post.id}}</small></a><br>
+            <small class="title_thread">{{p.title}}</small>
+            <small class="name_thread">{{p.name}}</small>
+            <small class="text-muted date_thread">{{ p.date_posted.strftime('%d/%m/%y(%a)%H:%M:%S') }}</small>
+            <a href="{{ url_for('post', post_id=p.id) }}"><small class="id_thread">No.{{p.id}}</small></a><br>
             </div>
-            <p class="content_thread">{{post.content}}</p>
+            <p class="content_thread">{{p.content}}</p>
         </article>
+        {% else %}
+        <div class="d-inline-flex">
+          <article class="media post">
+        <div class="media-body">
+          <div class="post-metadata">
+            <small class="name_thread">{{p.name}}</small>
+            <small class="text-muted date_thread">{{ p.date_posted.strftime('%d/%m/%y(%a)%H:%M:%S') }}</small>
+            <small class="id_thread">No.{{p.id}}</small><br>
+          </div>
+          <!-- <img class="image_post px-2" src="1450659832892.png"> have to implement support for image in post -->
+          <div class="content_post px-4">{{p.content}} </div>
+        </div>
+        </article>
+        </div> <br>
+        {% endif %}
+         {% endfor %}
           <div class="col-sm-1">
              <span>&nbsp;</span>
           </div>
