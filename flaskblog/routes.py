@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
-from flaskblog.utilfuncs import utc_to_local
+from flaskblog.utilfuncs import utc_to_local, save_picture
 
 
 @app.route("/")
@@ -38,10 +38,11 @@ def new_post():
     form = PostForm()
     if form.validate_on_submit():
         ip = request.environ['REMOTE_ADDR']
+        image = save_picture(form.image.data)
         if form.name.data == '':
-            post = Post(title=form.title.data, content=form.content.data,ip=ip, name='Anonymous')
+            post = Post(title=form.title.data, content=form.content.data,ip=ip, name='Anonymous',image_file=image)
         else:
-            post = Post(title=form.title.data, content=form.content.data,ip=ip, name=form.name.data)
+            post = Post(title=form.title.data, content=form.content.data,ip=ip, name=form.name.data,image_file=image)
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
@@ -95,9 +96,14 @@ def new_subpost(post_id):
     if form.validate_on_submit():
         ip = request.environ['REMOTE_ADDR']
         if form.name.data == '':
-            subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name='Anonymous')
+            name = 'Anonymous'
         else:
-            subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=form.name.data)
+            name = form.name.data
+        if form.image.data:
+            image = save_picture(form.image.data)
+            subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=name,image_file=image)
+        else:
+            subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=name,image_file='')
         db.session.add(subpost)
         db.session.commit()
         flash('Your subpost has been created!', 'success')

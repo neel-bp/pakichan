@@ -4,7 +4,7 @@
       {% for p in post %}
        {% if post.index(p) == 0 %}
         <article class="media thread">
-          <img class="px-2 py-2 image_thread" src="https://via.placeholder.com/1280x720">
+          <img class="px-2 py-2 image_thread" src="{{ url_for('static', filename='pics/' + p.image_file) }}">
           <div class="thread-metadata">
             <small class="title_thread">{{p.title}}</small>
             <small class="name_thread">{{p.name}}</small>
@@ -22,7 +22,9 @@
             <small class="text-muted date_thread">{{ utcToLocal(p.date_posted).strftime('%d/%m/%y(%a)%H:%M:%S') }}</small>
             <small class="id_thread">No.{{p.id}}</small><br>
           </div>
-          <!-- <img class="image_post px-2" src="1450659832892.png"> have to implement support for image in post -->
+          {% if p.image_file != '' %}
+          <img class="image_post px-2" src="{{ url_for('static', filename='pics/' + p.image_file) }}">
+          {% endif %}
           <div class="content_post px-4">{{p.content}} </div>
         </div>
         </article>

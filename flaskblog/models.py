@@ -10,6 +10,7 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    image_file = db.Column(db.String(20), nullable=True)
     parent = db.relationship('Post', primaryjoin=('Post.parent_id==Post.id'),remote_side=id, backref='subpost')
 
     def __repr__(self):
