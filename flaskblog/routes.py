@@ -1,10 +1,8 @@
-import os
-import secrets
-from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
+from flaskblog.utilfuncs import utc_to_local
 
 
 @app.route("/")
@@ -26,26 +24,12 @@ def home():
                 thread_n_posts.append(k)
             posts.append(thread_n_posts)
 
-    return render_template('home.html', posts=posts)
+    return render_template('home.html', posts=posts, utcToLocal=utc_to_local)
 
 
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
-
-
-def save_picture(form_picture):
-    random_hex = secrets.token_hex(8)
-    _, f_ext = os.path.splitext(form_picture.filename)
-    picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
-
-    output_size = (125, 125)
-    i = Image.open(form_picture)
-    i.thumbnail(output_size)
-    i.save(picture_path)
-
-    return picture_fn
 
 
 
@@ -71,7 +55,7 @@ def post(post_id):
     thread_id = post_id
     post = Post.query.get_or_404(post_id)
     subposts = Post.query.filter(Post.parent_id == thread_id).all()
-    return render_template('post.html', title=post.title, post=post, subposts=subposts)
+    return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local)
 
 
 # @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
