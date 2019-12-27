@@ -1,2 +1,3 @@
 flaskblog/__pycache__/*
 flaskblog/site.db
+flaskblog/static/pics/*
