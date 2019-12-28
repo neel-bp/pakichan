@@ -86,10 +86,6 @@ a.article-title:hover {
 
 .image_thread {
   float: left;
-  max-width: 250px;
-  max-height: 221px;
-  width: auto;
-  height: auto;
 }
 .thread-metadata {
   padding-top: 4px;
@@ -129,10 +125,6 @@ a.article-title:hover {
 }
 .image_post {
   float: left;
-  max-width: 150px;
-  max-height: 110px;
-  width: auto;
-  height: auto;
   margin-top: 15px;
   margin-bottom: 15px;
 }
