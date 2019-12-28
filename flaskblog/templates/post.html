@@ -17,7 +17,7 @@
   </article>
   #}
   <article class="media thread">
-    <img class="px-2 py-2 image_thread" src="{{ url_for('static', filename='pics/' + post.image_file) }}">
+    <a href="{{url_for('static', filename='pics/' + post.image_file)}}"><img class="px-2 py-2 image_thread" src="{{ url_for('static', filename='thumbs/' + post.image_file[:Len(post.image_file)-4]) }}"></a>
     <div class="thread-metadata">
       <small class="title_thread">{{post.title}}</small>
       <small class="name_thread">{{post.name}}</small>
@@ -38,7 +38,7 @@
       <small class="id_thread">No.{{subpost.id}}</small><br>
     </div>
     {% if subpost.image_file != '' %}
-    <img class="image_post px-2" src="{{ url_for('static', filename='pics/' + subpost.image_file) }}">
+    <a href="{{url_for('static', filename='pics/' + subpost.image_file)}}"><img class="image_post px-2" src="{{ url_for('static', filename='thumbs/' + subpost.image_file[:Len(subpost.image_file)-4]) }}"></a>
     {% endif %}
     <div class="content_post px-4">{{subpost.content}} </div>
   </div>

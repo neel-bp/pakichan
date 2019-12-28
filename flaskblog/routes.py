@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
-from flaskblog.utilfuncs import utc_to_local, save_picture
+from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture
 
 
 @app.route("/")
@@ -24,7 +24,7 @@ def home():
                 thread_n_posts.append(k)
             posts.append(thread_n_posts)
 
-    return render_template('home.html', posts=posts, utcToLocal=utc_to_local)
+    return render_template('home.html', posts=posts, utcToLocal=utc_to_local, Len=len)
 
 
 @app.route("/about")
@@ -38,7 +38,7 @@ def new_post():
     form = PostForm()
     if form.validate_on_submit():
         ip = request.environ['REMOTE_ADDR']
-        image = save_picture(form.image.data)
+        image = thread_save_picture(form.image.data)
         if form.name.data == '':
             post = Post(title=form.title.data, content=form.content.data,ip=ip, name='Anonymous',image_file=image)
         else:
@@ -56,7 +56,7 @@ def post(post_id):
     thread_id = post_id
     post = Post.query.get_or_404(post_id)
     subposts = Post.query.filter(Post.parent_id == thread_id).all()
-    return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local)
+    return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len)
 
 
 # @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
@@ -100,7 +100,7 @@ def new_subpost(post_id):
         else:
             name = form.name.data
         if form.image.data:
-            image = save_picture(form.image.data)
+            image = post_save_picture(form.image.data)
             subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=name,image_file=image)
         else:
             subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=name,image_file='')

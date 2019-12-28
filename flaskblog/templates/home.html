@@ -4,7 +4,7 @@
       {% for p in post %}
        {% if post.index(p) == 0 %}
         <article class="media thread">
-          <img class="px-2 py-2 image_thread" src="{{ url_for('static', filename='pics/' + p.image_file) }}">
+          <a href="{{url_for('static', filename='pics/' + p.image_file)}}"><img class="px-2 py-2 image_thread" src="{{ url_for('static', filename='thumbs/' + p.image_file[:Len(p.image_file)-4]) }}"></a>
           <div class="thread-metadata">
             <small class="title_thread">{{p.title}}</small>
             <small class="name_thread">{{p.name}}</small>
@@ -23,7 +23,7 @@
             <small class="id_thread">No.{{p.id}}</small><br>
           </div>
           {% if p.image_file != '' %}
-          <img class="image_post px-2" src="{{ url_for('static', filename='pics/' + p.image_file) }}">
+          <a href="{{url_for('static', filename='pics/' + p.image_file)}}"><img class="image_post px-2" src="{{ url_for('static', filename='thumbs/' + p.image_file[:Len(p.image_file)-4]) }}"></a>
           {% endif %}
           <div class="content_post px-4">{{p.content}} </div>
         </div>
