@@ -143,3 +143,8 @@ a.article-title:hover {
   font-size: 10pt;
   white-space: pre-line;
 }
+
+.greentext {
+  color: green;
+  white-space: normal;
+}

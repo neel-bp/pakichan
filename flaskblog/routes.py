@@ -2,8 +2,8 @@ from flask import render_template, url_for, flash, redirect, request
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
-from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture
-
+from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, greentext
+import re
 
 @app.route("/")
 @app.route("/home")
@@ -39,6 +39,7 @@ def new_post():
     if form.validate_on_submit():
         ip = request.environ['REMOTE_ADDR']
         image = thread_save_picture(form.image.data)
+        form.content.data = re.sub(r'^>.*',greentext,form.content.data,flags=re.MULTILINE)
         if form.name.data == '':
             post = Post(title=form.title.data, content=form.content.data,ip=ip, name='Anonymous',image_file=image)
         else:
@@ -95,6 +96,7 @@ def new_subpost(post_id):
     form = SubPostForm()
     if form.validate_on_submit():
         ip = request.environ['REMOTE_ADDR']
+        form.content.data = re.sub(r'^>.*',greentext,form.content.data,flags=re.MULTILINE)
         if form.name.data == '':
             name = 'Anonymous'
         else:
@@ -109,7 +111,6 @@ def new_subpost(post_id):
         flash('Your subpost has been created!', 'success')
         return redirect(url_for('post', post_id=redirectpostid))
     return render_template('create_subpost.html', form=form)
-
 
 
 # @app.route("/post/<int:post_id>/subpost/<int:subpost_id>/update", methods=['GET', 'POST'])
@@ -140,3 +141,6 @@ def new_subpost(post_id):
 #     db.session.commit()
 #     flash('Your post has been deleted!', 'success')
 #     return redirect(url_for('post',post_id=post.id))
+# jinja whitelisting few html tags
+
+app.jinja_env.filters['clean'] = do_clean
