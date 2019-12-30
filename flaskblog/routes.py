@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
-from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, greentext, greenregex
+from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, greenregex
 
 @app.route("/")
 @app.route("/home")
