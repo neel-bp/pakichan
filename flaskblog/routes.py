@@ -2,8 +2,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
-from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, greentext
-import re
+from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, greentext, greenregex
 
 @app.route("/")
 @app.route("/home")
@@ -24,7 +23,7 @@ def home():
                 thread_n_posts.append(k)
             posts.append(thread_n_posts)
 
-    return render_template('home.html', posts=posts, utcToLocal=utc_to_local, Len=len)
+    return render_template('home.html', posts=posts, utcToLocal=utc_to_local, Len=len, greenRegex=greenregex)
 
 
 @app.route("/about")
@@ -39,7 +38,6 @@ def new_post():
     if form.validate_on_submit():
         ip = request.environ['REMOTE_ADDR']
         image = thread_save_picture(form.image.data)
-        form.content.data = re.sub(r'^>.*',greentext,form.content.data,flags=re.MULTILINE)
         if form.name.data == '':
             post = Post(title=form.title.data, content=form.content.data,ip=ip, name='Anonymous',image_file=image)
         else:
@@ -57,7 +55,7 @@ def post(post_id):
     thread_id = post_id
     post = Post.query.get_or_404(post_id)
     subposts = Post.query.filter(Post.parent_id == thread_id).all()
-    return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len)
+    return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len, greenRegex=greenregex)
 
 
 # @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
@@ -96,7 +94,6 @@ def new_subpost(post_id):
     form = SubPostForm()
     if form.validate_on_submit():
         ip = request.environ['REMOTE_ADDR']
-        form.content.data = re.sub(r'^>.*',greentext,form.content.data,flags=re.MULTILINE)
         if form.name.data == '':
             name = 'Anonymous'
         else:

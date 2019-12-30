@@ -5,6 +5,7 @@ from flaskblog import app
 from datetime import timezone
 from bleach import clean
 from markupsafe import Markup
+import re
 
 def thread_save_picture(form_picture):
     random_hex = secrets.token_hex(8)
@@ -45,3 +46,6 @@ def do_clean(text, **kw):
     """Perform clean and return a Markup object to mark the string as safe.
     This prevents Jinja from re-escaping the result."""
     return Markup(clean(text, **kw))
+
+def greenregex(content):
+    return re.sub(r'^>.*',greentext,content,flags=re.MULTILINE)
