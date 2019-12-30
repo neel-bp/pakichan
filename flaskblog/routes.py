@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
-from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, greenregex
+from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, greenregex, hrefregex
 
 @app.route("/")
 @app.route("/home")
@@ -23,7 +23,7 @@ def home():
                 thread_n_posts.append(k)
             posts.append(thread_n_posts)
 
-    return render_template('home.html', posts=posts, utcToLocal=utc_to_local, Len=len, greenRegex=greenregex)
+    return render_template('home.html', posts=posts, utcToLocal=utc_to_local, Len=len, greenRegex=greenregex, hrefRegex=hrefregex)
 
 
 @app.route("/about")
@@ -55,7 +55,7 @@ def post(post_id):
     thread_id = post_id
     post = Post.query.get_or_404(post_id)
     subposts = Post.query.filter(Post.parent_id == thread_id).all()
-    return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len, greenRegex=greenregex)
+    return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len, greenRegex=greenregex,hrefRegex=hrefregex)
 
 
 # @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])

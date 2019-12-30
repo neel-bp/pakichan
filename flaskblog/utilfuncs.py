@@ -46,14 +46,22 @@ def post_save_picture(form_picture):
 def utc_to_local(utc_d):
     return utc_d.replace(tzinfo=timezone.utc).astimezone()
 
-def greentext(m):
-    return f'<span class="greentext">{m.group(0)}</span>'
-
 # functions for white listing html tags in jinja templates
 def do_clean(text, **kw):
     """Perform clean and return a Markup object to mark the string as safe.
     This prevents Jinja from re-escaping the result."""
     return Markup(clean(text, **kw))
 
+# regex and replace for greentexting
+def greentext(m):
+    return f'<span class="greentext">{m.group(0)}</span>'
+
 def greenregex(content):
     return re.sub(r'^>.*',greentext,content,flags=re.MULTILINE)
+
+# regex and replace for href jumping
+def href(m):
+    return f'<a href=#{m.group(0)[2:]}>{m.group(0)}</a>'
+
+def hrefregex(content):
+    return re.sub(r'>>[0-9]*',href,content)

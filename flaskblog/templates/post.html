@@ -22,9 +22,9 @@
       <small class="title_thread">{{post.title}}</small>
       <small class="name_thread">{{post.name}}</small>
       <small class="text-muted date_thread">{{ utcToLocal(post.date_posted).strftime('%d/%m/%y(%a)%H:%M:%S') }}</small>
-      <a href="{{ url_for('post', post_id=post.id) }}"><small class="id_thread">No.{{post.id}}</small></a><br>
+      <a href="{{ url_for('post', post_id=post.id) }}"><small id="{{post.id}}" class="id_thread">No.{{post.id}}</small></a><br>
       </div>
-      <p class="content_thread">{{greenRegex(post.content)|clean(tags=['span'], attributes={'span':['class']}) }}</p>
+      <p class="content_thread">{{greenRegex(hrefRegex(post.content))|clean(tags=['span','a'], attributes={'span':['class'],'a':['href']}) }}</p>
   </article>
   
   {% for subpost in subposts %}
@@ -35,12 +35,12 @@
     <div class="post-metadata">
       <small class="name_thread">{{subpost.name}}</small>
       <small class="text-muted date_thread">{{ utcToLocal(subpost.date_posted).strftime('%d/%m/%y(%a)%H:%M:%S') }}</small>
-      <small class="id_thread">No.{{subpost.id}}</small><br>
+      <small id="{{subpost.id}}" class="id_thread">No.{{subpost.id}}</small><br>
     </div>
     {% if subpost.image_file != '' %}
     <a href="{{url_for('static', filename='pics/' + subpost.image_file)}}"><img class="image_post px-2" src="{{ url_for('static', filename='thumbs/' + subpost.image_file[:Len(subpost.image_file)-4]) }}"></a>
     {% endif %}
-    <div class="content_post px-4">{{greenRegex(subpost.content)|clean(tags=['span'], attributes={'span':['class']}) }} </div>
+    <div class="content_post px-4">{{greenRegex(hrefRegex(subpost.content))|clean(tags=['span','a'], attributes={'span':['class'],'a':['href']}) }} </div>
   </div>
   </article>
   </div> <br>
