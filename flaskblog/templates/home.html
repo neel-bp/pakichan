@@ -11,7 +11,7 @@
             <small class="text-muted date_thread">{{ utcToLocal(p.date_posted).strftime('%d/%m/%y(%a)%H:%M:%S') }}</small>
             <a href="{{ url_for('post', post_id=p.id) }}"><small class="id_thread">No.{{p.id}}</small></a><br>
             </div>
-            <p class="content_thread">{{ greenRegex(hrefRegex(p.content))|clean(tags=['span','a'], attributes={'span':['class'],'a':['href']}) }}</p>
+            <p class="content_thread">{{ greenRegex(hrefRegex(p.content))|clean(tags=['span','a','pre'], attributes={'span':['class'],'a':['href'],'pre':[]}) }}</p>
         </article>
         {% else %}
         <div class="d-inline-flex">
@@ -25,7 +25,7 @@
           {% if p.image_file != '' %}
           <a href="{{url_for('static', filename='pics/' + p.image_file)}}"><img class="image_post px-2" src="{{ url_for('static', filename='thumbs/' + p.image_file[:Len(p.image_file)-4]) }}"></a>
           {% endif %}
-          <div class="content_post px-4">{{ greenRegex(hrefRegex(p.content))|clean(tags=['span','a'], attributes={'span':['class'],'a':['href']}) }}</div>
+          <div class="content_post px-4">{{ greenRegex(hrefRegex(p.content))|clean(tags=['span','a',pre], attributes={'span':['class'],'a':['href'],'pre':[]}) }}</div>
         </div>
         </article>
         </div> <br>
