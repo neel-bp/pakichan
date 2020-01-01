@@ -21,7 +21,7 @@
     <div class="thread-metadata">
       <small class="title_thread">{{post.title}}</small>
       <small class="name_thread">{{post.name}}</small>
-      <small class="text-muted date_thread">{{ utcToLocal(post.date_posted).strftime('%d/%m/%y(%a)%H:%M:%S') }}</small>
+      <small class="text-muted date_thread">{{ post.date_posted|moment }}</small>
       <a href="{{ url_for('post', post_id=post.id) }}"><small id="{{post.id}}" class="id_thread">No.{{post.id}}</small></a><br>
       </div>
       <p class="content_thread">{{greenRegex(hrefRegex(post.content))|clean(tags=['span','a','pre'], attributes={'span':['class'],'a':['href'],'pre':[]}) }}</p>
@@ -34,7 +34,7 @@
   <div class="media-body">
     <div class="post-metadata">
       <small class="name_thread">{{subpost.name}}</small>
-      <small class="text-muted date_thread">{{ utcToLocal(subpost.date_posted).strftime('%d/%m/%y(%a)%H:%M:%S') }}</small>
+      <small class="text-muted date_thread">{{ subpost.date_posted|moment }}</small>
       <small id="{{subpost.id}}" class="id_thread">No.{{subpost.id}}</small><br>
     </div>
     {% if subpost.image_file != '' %}

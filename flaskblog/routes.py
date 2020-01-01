@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
-from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, greenregex, hrefregex
+from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, greenregex, hrefregex, moment
 
 @app.route("/")
 @app.route("/home")
@@ -138,6 +138,8 @@ def new_subpost(post_id):
 #     db.session.commit()
 #     flash('Your post has been deleted!', 'success')
 #     return redirect(url_for('post',post_id=post.id))
-# jinja whitelisting few html tags
 
+# jinja filter for whitelisting html tags.
 app.jinja_env.filters['clean'] = do_clean
+# jinja filter for moment js
+app.jinja_env.filters['moment'] = moment

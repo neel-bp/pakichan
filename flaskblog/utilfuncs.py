@@ -65,3 +65,7 @@ def href(m):
 
 def hrefregex(content):
     return re.sub(r'>>[0-9]*',href,content)
+
+# jijnja filter for moment.js for converting datetime to client timezone
+def moment(date):
+    return Markup(f'<script>document.write(moment("{str(date)}"+"Z").format("DD/MM/YY(ddd)HH:mm:ss"))</script>')
