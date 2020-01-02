@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
@@ -54,6 +54,8 @@ def new_post():
 def post(post_id):
     thread_id = post_id
     post = Post.query.get_or_404(post_id)
+    if post.parent_id is not None:
+        abort(404)
     subposts = Post.query.filter(Post.parent_id == thread_id).all()
     return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len, greenRegex=greenregex,hrefRegex=hrefregex)
 
