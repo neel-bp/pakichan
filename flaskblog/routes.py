@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, abort
+from flask import render_template, url_for, redirect, request, abort
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
@@ -40,25 +40,6 @@ def home():
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
-
-
-
-@app.route("/post/new", methods=['GET', 'POST'])
-def new_post():
-    form = PostForm()
-    if form.validate_on_submit():
-        ip = request.environ['REMOTE_ADDR']
-        image = thread_save_picture(form.image.data)
-        if form.name.data == '':
-            post = Post(title=form.title.data, content=form.content.data,ip=ip, name='Anonymous',image_file=image)
-        else:
-            post = Post(title=form.title.data, content=form.content.data,ip=ip, name=form.name.data,image_file=image)
-        db.session.add(post)
-        db.session.commit()
-        flash('Your post has been created!', 'success')
-        return redirect(url_for('home'))
-    return render_template('create_post.html', title='New Post',
-                           form=form, legend='New Post')
 
 
 @app.route("/post/<int:post_id>", methods=['GET','POST'])
