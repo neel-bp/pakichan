@@ -61,11 +61,7 @@ def greenregex(content):
 
 # regex and replace for href jumping
 def href(m):
-    jump = int(m.group(0)[2:]) - 1
-    if jump < 1:
-        jump = 1
-    str(jump)
-    return f'<a href=#{jump}>{m.group(0)}</a>'
+    return f'<a href=#{m.group(0)[2:]}>{m.group(0)}</a>'
 
 def hrefregex(content):
     return re.sub(r'>>[0-9]*',href,content)
