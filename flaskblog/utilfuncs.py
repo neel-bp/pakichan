@@ -3,9 +3,10 @@ import secrets
 from PIL import Image
 from flaskblog import app
 from datetime import timezone
-from bleach import clean
+from bleach import clean, linkify
 from markupsafe import Markup
 import re
+import html
 
 def thread_save_picture(form_picture):
     random_hex = secrets.token_hex(8)
@@ -69,3 +70,18 @@ def hrefregex(content):
 # jijnja filter for moment.js for converting datetime to client timezone
 def moment(date):
     return Markup(f'<script>document.write(moment("{str(date)}"+"Z").format("DD/MM/YY(ddd)HH:mm:ss"))</script>')
+
+def linky(content):
+    linkified_text = linkify(content)  # it linkifies text but unescape everything else
+    return html.unescape(linkified_text)  # unescaping linkified text
+
+# regex and replace for spoiler text
+def spoiler(m):
+    return f'<span class="spoiler">{m.group(1)}</span>'
+
+def spoilerregex(content):
+    return re.sub(r'\[s\](.*?)\[\/s\]',spoiler,content)
+
+# combining all regex
+def allRegex(content):
+    return spoilerregex(greenregex(hrefregex(linky(content))))

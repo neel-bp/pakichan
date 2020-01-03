@@ -155,3 +155,12 @@ div.form-group > * {
 .form-group {
   margin-bottom: 0.5rem;
 }
+
+.spoiler{ 
+  color: black; 
+  background-color:black;
+}
+
+.spoiler:hover{
+  color: white;
+  }

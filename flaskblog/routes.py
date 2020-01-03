@@ -2,7 +2,7 @@ from flask import render_template, url_for, redirect, request, abort
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
-from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, greenregex, hrefregex, moment
+from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, allRegex, moment
 
 @app.route("/", methods=['GET','POST'])
 @app.route("/home", methods=['GET','POST'])
@@ -34,7 +34,7 @@ def home():
                 thread_n_posts.append(k)
             posts.append(thread_n_posts)
 
-    return render_template('home.html', posts=posts, utcToLocal=utc_to_local, Len=len, greenRegex=greenregex, hrefRegex=hrefregex, form=form)
+    return render_template('home.html', posts=posts, utcToLocal=utc_to_local, Len=len, allRegex=allRegex, form=form)
 
 
 @app.route("/about")
@@ -65,7 +65,7 @@ def post(post_id):
     if post.parent_id is not None:
         abort(404)
     subposts = Post.query.filter(Post.parent_id == thread_id).all()
-    return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len, greenRegex=greenregex,hrefRegex=hrefregex, form=form)
+    return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len, allRegex=allRegex, form=form)
 
 
 # @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])

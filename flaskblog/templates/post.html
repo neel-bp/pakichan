@@ -81,7 +81,7 @@
       <small class="text-muted date_thread">{{ post.date_posted|moment }}</small>
       <a href="javascript:id_append('>>{{post.id}}\n','contentTextarea')"><small id="{{post.id}}" class="id_thread">No.{{post.id}}</small></a><br>
       </div>
-      <p class="content_thread">{{greenRegex(hrefRegex(post.content))|clean(tags=['span','a','pre'], attributes={'span':['class'],'a':['href'],'pre':[]}) }}</p>
+      <p class="content_thread">{{allRegex(post.content)|clean(tags=['span','a','pre'], attributes={'span':['class'],'a':['href'],'pre':[]}) }}</p>
   </article>
   
   {% for subpost in subposts %}
@@ -97,7 +97,7 @@
     {% if subpost.image_file != '' %}
     <a href="{{url_for('static', filename='pics/' + subpost.image_file)}}"><img class="image_post px-2" src="{{ url_for('static', filename='thumbs/' + subpost.image_file[:Len(subpost.image_file)-4]) }}"></a>
     {% endif %}
-    <div class="content_post px-4">{{greenRegex(hrefRegex(subpost.content))|clean(tags=['span','a','pre'], attributes={'span':['class'],'a':['href'],'pre':[]}) }} </div>
+    <div class="content_post px-4">{{allRegex(subpost.content)|clean(tags=['span','a','pre'], attributes={'span':['class'],'a':['href'],'pre':[]}) }} </div>
   </div>
   </article>
   </div> <br>
