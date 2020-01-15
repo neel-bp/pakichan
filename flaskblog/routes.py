@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, request, abort, flash
+from flask import render_template, url_for, redirect, request, abort, flash, session
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
@@ -7,18 +7,24 @@ from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_pic
 @app.route("/", methods=['GET','POST'])
 @app.route("/home", methods=['GET','POST'])
 def home():
-    form = PostForm()
+    form = PostForm(csrf_enabled=False)
     if request.method == 'POST':
         if form.validate():
-            ip = request.environ['REMOTE_ADDR']
-            image = thread_save_picture(form.image.data)
-            if form.name.data == '':
-                post = Post(title=form.title.data, content=form.content.data,ip=ip, name='Anonymous',image_file=image)
+            if session.get('ip') is not None:
+                flash('wait a minute before trying to post again, dummy', 'postfailed')
+                return redirect(url_for('home'))
             else:
-                post = Post(title=form.title.data, content=form.content.data,ip=ip, name=form.name.data,image_file=image)
-            db.session.add(post)
-            db.session.commit()
-            return redirect(url_for('home'))
+                ip = request.environ['REMOTE_ADDR']
+                image = thread_save_picture(form.image.data)
+                if form.name.data == '':
+                    post = Post(title=form.title.data, content=form.content.data,ip=ip, name='Anonymous',image_file=image)
+                else:
+                    post = Post(title=form.title.data, content=form.content.data,ip=ip, name=form.name.data,image_file=image)
+                db.session.add(post)
+                db.session.commit()
+                session.permanent = True
+                session['ip'] = ip
+                return redirect(url_for('home'))
         else:
             flash(str(form.errors).replace("'",'').replace('[','').replace(']','').replace('{','').replace('}','').replace('This','').replace(':',''),'postfailed')
             return redirect(url_for('home'))
@@ -50,22 +56,28 @@ def about():
 @app.route("/post/<int:post_id>", methods=['GET','POST'])
 def post(post_id):
     redirectpostid=post_id
-    form = SubPostForm()
+    form = SubPostForm(csrf_enabled=False)
     if request.method == 'POST':
         if form.validate():
-            ip = request.environ['REMOTE_ADDR']
-            if form.name.data == '':
-                name = 'Anonymous'
+            if session.get('ip') is not None:
+                flash('wait a minute before trying to post again, dummy', 'postfailed')
+                return redirect(url_for('post', post_id=redirectpostid))
             else:
-                name = form.name.data
-            if form.image.data:
-                image = post_save_picture(form.image.data)
-                subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=name,image_file=image)
-            else:
-                subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=name,image_file='')
-            db.session.add(subpost)
-            db.session.commit()
-            return redirect(url_for('post', post_id=redirectpostid))
+                ip = request.environ['REMOTE_ADDR']
+                if form.name.data == '':
+                    name = 'Anonymous'
+                else:
+                    name = form.name.data
+                if form.image.data:
+                    image = post_save_picture(form.image.data)
+                    subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=name,image_file=image)
+                else:
+                    subpost = Post(content=form.content.data, parent_id=post_id,ip=ip,name=name,image_file='')
+                db.session.add(subpost)
+                db.session.commit()
+                session.permanent = True
+                session['ip'] = ip
+                return redirect(url_for('post', post_id=redirectpostid))
         else:
             flash(str(form.errors).replace("'",'').replace('[','').replace(']','').replace('{','').replace('}','').replace('This','').replace(':',''),'postfailed')
             return redirect(url_for('post', post_id=redirectpostid))
