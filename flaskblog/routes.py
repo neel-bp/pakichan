@@ -2,7 +2,8 @@ from flask import render_template, url_for, redirect, request, abort, flash, ses
 from flaskblog import app, db
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.models import Post  # SubPost
-from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, allRegex, moment
+from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, allRegex, moment, bumpOrderThreshold
+import os
 
 @app.route("/", methods=['GET','POST'])
 @app.route("/home", methods=['GET','POST'])
@@ -22,6 +23,26 @@ def home():
                     post = Post(title=form.title.data, content=form.content.data,ip=ip, name=form.name.data,image_file=image)
                 db.session.add(post)
                 db.session.commit()
+
+                # content circulation
+                if bumpOrderThreshold() != 'maxLimitNotReached':
+                    leastactivethread = bumpOrderThreshold()
+                    for i in Post.query.filter(Post.parent_id==leastactivethread.id).all():
+                        try:
+                            os.remove(os.path.join(app.root_path,'static','pics',i.image_file))
+                            os.remove(os.path.join(app.root_path,'static','thumbs',i.image_file[:len(i.image_file) - 4]))
+                        except FileNotFoundError:
+                            pass
+                    try:
+                        os.remove(os.path.join(app.root_path,'static','pics',leastactivethread.image_file))
+                        os.remove(os.path.join(app.root_path,'static','thumbs',leastactivethread.image_file[:len(leastactivethread.image_file) - 4]))
+                    except FileNotFoundError:
+                        pass
+                    delete_subposts = Post.__table__.delete().where(Post.parent_id == leastactivethread.id)
+                    db.session.execute(delete_subposts)
+                    db.session.delete(leastactivethread)
+                    db.session.commit()
+
                 session.permanent = True
                 session['ip'] = ip
                 return redirect(url_for('home'))

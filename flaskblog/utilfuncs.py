@@ -7,6 +7,7 @@ from bleach import clean, linkify
 from markupsafe import Markup
 import re
 import html
+from flaskblog.models import Post
 
 def thread_save_picture(form_picture):
     random_hex = secrets.token_hex(8)
@@ -85,3 +86,16 @@ def spoilerregex(content):
 # combining all regex
 def allRegex(content):
     return spoilerregex(greenregex(hrefregex(linky(content))))
+
+# content circulation, whenever threads exceed 7 (for now) it will delete the least active thread, or bottom most thread
+def bumpOrderThreshold():
+    threads=[]
+    for i in Post.query.order_by(Post.date_posted.desc()).all():
+        if i.parent is None and i not in threads:
+            threads.append(i)
+        elif i.parent is not None and i.parent not in threads:
+            threads.append(i.parent)
+    if len(threads) > 200:
+        return threads[len(threads) - 1]
+    else:
+        return 'maxLimitNotReached'
