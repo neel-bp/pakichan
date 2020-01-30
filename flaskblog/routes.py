@@ -138,11 +138,12 @@ def delete_post(post_id):
         abort(403)
     if post.parent_id is None:  # that means its a whole thread instead of being a simple post
         for i in Post.query.filter(Post.parent_id==post.id).all():
-            try:
-                os.remove(os.path.join(app.root_path,'static','pics',i.image_file))
-                os.remove(os.path.join(app.root_path,'static','thumbs',i.image_file[:len(i.image_file) - 4]))
-            except FileNotFoundError:
-                pass
+            if i.image_file != '':
+                try:
+                    os.remove(os.path.join(app.root_path,'static','pics',i.image_file))
+                    os.remove(os.path.join(app.root_path,'static','thumbs',i.image_file[:len(i.image_file) - 4]))
+                except FileNotFoundError:
+                    pass
         try:
             os.remove(os.path.join(app.root_path,'static','pics',post.image_file))
             os.remove(os.path.join(app.root_path,'static','thumbs',post.image_file[:len(post.image_file) - 4]))
