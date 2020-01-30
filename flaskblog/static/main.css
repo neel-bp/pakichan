@@ -172,3 +172,11 @@ div.form-group > * {
  border-color: #800;
  color: #800;
 }
+
+.alert-postdelete{
+  border-radius: 0px;
+  background-color:#ea8;
+  border: 1px solid;
+  border-color: #800;
+  color: #800;
+ }

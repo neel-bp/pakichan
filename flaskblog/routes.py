@@ -130,16 +130,44 @@ def post(post_id):
 #                            form=form, legend='Update Post')
 
 
-# @app.route("/post/<int:post_id>/delete", methods=['POST'])
-# def delete_post(post_id):
-#     post = Post.query.get_or_404(post_id)
-#     if post.author != current_user:
-#         abort(403)
-#     SubPost.query.filter(SubPost.post_id == post_id).delete(synchronize_session=False)
-#     db.session.delete(post)
-#     db.session.commit()
-#     flash('Your post has been deleted!', 'success')
-#     return redirect(url_for('home'))
+
+@app.route('/post/<int:post_id>/delete', methods=['POST','GET'])
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.ip != request.environ['REMOTE_ADDR']:
+        abort(403)
+    if post.parent_id is None:  # that means its a whole thread instead of being a simple post
+        for i in Post.query.filter(Post.parent_id==post.id).all():
+            try:
+                os.remove(os.path.join(app.root_path,'static','pics',i.image_file))
+                os.remove(os.path.join(app.root_path,'static','thumbs',i.image_file[:len(i.image_file) - 4]))
+            except FileNotFoundError:
+                pass
+        try:
+            os.remove(os.path.join(app.root_path,'static','pics',post.image_file))
+            os.remove(os.path.join(app.root_path,'static','thumbs',post.image_file[:len(post.image_file) - 4]))
+        except FileNotFoundError:
+            pass
+        delete_suposts = Post.__table__.delete().where(Post.parent_id == post.id)
+        db.session.execute(delete_suposts)
+        db.session.delete(post)
+        db.session.commit()
+        flash('Thread Successfully deleted!', 'postdelete')
+        return redirect(url_for('home'))
+
+    elif post.parent_id is not None:  # that means its a simple post and not a thread.
+        if post.image_file != '':
+            try:
+                os.remove(os.path.join(app.root_path,'static','pics',post.image_file))
+                os.remove(os.path.join(app.root_path,'static','thumbs',post.image_file[:len(post.image_file) - 4]))
+            except FileNotFoundError:
+                pass
+        else:
+            pass
+        db.session.delete(post)
+        db.session.commit()
+        flash('Post deleted successfully', 'postdelete')
+        return redirect(url_for('post',post_id=post.parent_id))
 
 
 # @app.route("/post/<int:post_id>/subpost/<int:subpost_id>/update", methods=['GET', 'POST'])
@@ -158,18 +186,6 @@ def post(post_id):
 #         form.content.data = subpost.content
 #     return render_template('create_subpost.html', title='Update SubPost',
 #                            form=form, legend='Update SubPost')
-
-
-# @app.route("/post/<int:post_id>/subpost/<int:subpost_id>/delete", methods=['POST','GET'])
-# def delete_subpost(post_id, subpost_id):
-#     post = Post.query.get_or_404(post_id)
-#     subpost = SubPost.query.get_or_404(subpost_id)
-#     if subpost.author != current_user:
-#         abort(403)
-#     db.session.delete(subpost)
-#     db.session.commit()
-#     flash('Your post has been deleted!', 'success')
-#     return redirect(url_for('post',post_id=post.id))
 
 # jinja filter for whitelisting html tags.
 app.jinja_env.filters['clean'] = do_clean

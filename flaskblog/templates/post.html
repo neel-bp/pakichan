@@ -79,7 +79,17 @@
       <small class="title_thread">{{post.title}}</small>
       <small class="name_thread">{{post.name}}</small>
       <small class="text-muted date_thread">{{ post.date_posted|moment }}</small>
-      <a href="javascript:id_append('>>{{post.id}}\n','contentTextarea')"><small id="{{post.id}}" class="id_thread">No.{{post.id}}</small></a><br>
+      <a href="javascript:id_append('>>{{post.id}}\n','contentTextarea')"><small id="{{post.id}}" class="id_thread">No.{{post.id}}</small></a>
+
+      <small>
+        <a class="dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        </a>
+      
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="{{ url_for('delete_post',post_id=post.id) }}">Delete</a>
+        </div>
+      </small><br>
+
       </div>
       <p class="content_thread">{{allRegex(post.content)|clean(tags=['span','a','pre'], attributes={'span':['class'],'a':['href'],'pre':[]}) }}</p>
   </article>
@@ -92,7 +102,17 @@
     <div class="post-metadata">
       <small class="name_thread">{{subpost.name}}</small>
       <small class="text-muted date_thread">{{ subpost.date_posted|moment }}</small>
-      <a href="javascript:id_append('>>{{subpost.id}}\n','contentTextarea')"><small id="{{subpost.id}}" class="id_thread">No.{{subpost.id}}</small></a><br>
+      <a href="javascript:id_append('>>{{subpost.id}}\n','contentTextarea')"><small id="{{subpost.id}}" class="id_thread">No.{{subpost.id}}</small></a>
+
+      <small>
+        <a class="dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        </a>
+      
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="{{ url_for('delete_post', post_id=subpost.id) }}">Delete</a>
+        </div>
+      </small><br>
+
     </div>
     {% if subpost.image_file != '' %}
     <a href="{{url_for('static', filename='pics/' + subpost.image_file)}}"><img class="image_post px-2" src="{{ url_for('static', filename='thumbs/' + subpost.image_file[:Len(subpost.image_file)-4]) }}"></a>
