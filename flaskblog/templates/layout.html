@@ -27,7 +27,10 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link py-0" href="{{ url_for('home') }}">/home/</a>
+              <a class="nav-item nav-link py-0" href="{{ url_for('home',boardname='b') }}">/b/</a>
+              <a class="nav-item nav-link py-0" href="{{ url_for('home',boardname='cnpol') }}">/cnpol/</a>
+              <a class="nav-item nav-link py-0" href="{{ url_for('home',boardname='meta') }}">/meta/</a>
+              <a class="nav-item nav-link py-0" href="{{ url_for('home',boardname='tech') }}">/tech/</a>
               <a class="nav-item nav-link py-0" href="{{ url_for('about') }}">/about/</a>
             </div>
             <!-- Navbar Right Side -->

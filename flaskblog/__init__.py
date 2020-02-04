@@ -10,4 +10,12 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 60
 app.config['SESSION_REFRESH_EACH_REQUEST'] = False
 db = SQLAlchemy(app)
 
+# boardlist dictionary
+boards = {
+    'b':'/b/ - random',
+    'cnpol':'/cnpol/ - Culture and Politics',
+    'meta':'/meta/ - Meta',
+    'tech': '/tech/ - Technology'
+}
+
 from flaskblog import routes
