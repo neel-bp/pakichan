@@ -8,6 +8,7 @@ from markupsafe import Markup
 import re
 import html
 from flaskblog.models import get_class_by_tablename
+from sqlalchemy import and_
 
 def thread_save_picture(form_picture):
     random_hex = secrets.token_hex(8)
@@ -102,3 +103,10 @@ def bumpOrderThreshold(boardname):
         return threads[len(threads) - 1]
     else:
         return 'maxLimitNotReached'
+
+def post_replies(boardname, thread_id, post_id):
+    li=[]
+    posts = get_class_by_tablename(boardname).query.filter(and_(get_class_by_tablename(boardname).parent_id == thread_id, get_class_by_tablename(boardname).content.ilike(f'>>%{post_id}%'))).all()
+    for i in posts:
+        li.append(i.id)
+    return li

@@ -3,6 +3,7 @@ from flaskblog import app, db, boards
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, allRegex, moment, bumpOrderThreshold
 from flaskblog.utilfuncs import get_class_by_tablename as board
+from flaskblog.utilfuncs import post_replies
 import os
 
 @app.route("/", methods=['GET','POST'])
@@ -111,7 +112,7 @@ def post(boardname,post_id):
         if post.parent_id is not None:
             abort(404)
         subposts = board(boardname).query.filter(board(boardname).parent_id == thread_id).all()
-    return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len, allRegex=allRegex, form=form, boardname=boardname, boardtitle=boards[boardname])
+    return render_template('post.html', title=post.title, post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len, allRegex=allRegex, form=form, boardname=boardname, boardtitle=boards[boardname], post_replies=post_replies)
 
 
 # @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
