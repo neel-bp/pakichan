@@ -9,10 +9,13 @@ class Random(db.Model):
     title = db.Column(db.String(100), nullable=True)
     ip = db.Column(db.String(100), nullable=True)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    content = db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=False, index=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('b.id'))
     image_file = db.Column(db.String(20), nullable=True)
     parent = db.relationship('Random', primaryjoin=('Random.parent_id==Random.id'),remote_side=id, backref='subpost')
+
+    def __repr__(self):
+        return f"Post('{self.title}', '{self.date_posted}, {self.id}, {self.parent_id}')"
 
 class Technology(db.Model):
     __tablename__ = 'tech'
@@ -21,10 +24,13 @@ class Technology(db.Model):
     title = db.Column(db.String(100), nullable=True)
     ip = db.Column(db.String(100), nullable=True)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    content = db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=False, index=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('tech.id'))
     image_file = db.Column(db.String(20), nullable=True)
     parent = db.relationship('Technology', primaryjoin=('Technology.parent_id==Technology.id'),remote_side=id, backref='subpost')
+
+    def __repr__(self):
+        return f"Post('{self.title}', '{self.date_posted}, {self.id}, {self.parent_id}')"
 
 class CultureAndPolitics(db.Model):
     __tablename__ = 'cnpol'
@@ -33,10 +39,13 @@ class CultureAndPolitics(db.Model):
     title = db.Column(db.String(100), nullable=True)
     ip = db.Column(db.String(100), nullable=True)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    content = db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=False, index=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('cnpol.id'))
     image_file = db.Column(db.String(20), nullable=True)
     parent = db.relationship('CultureAndPolitics', primaryjoin=('CultureAndPolitics.parent_id==CultureAndPolitics.id'),remote_side=id, backref='subpost')
+
+    def __repr__(self):
+        return f"Post('{self.title}', '{self.date_posted}, {self.id}, {self.parent_id}')"
 
 class Meta(db.Model):
     __tablename__ = 'meta'
@@ -45,7 +54,7 @@ class Meta(db.Model):
     title = db.Column(db.String(100), nullable=True)
     ip = db.Column(db.String(100), nullable=True)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    content = db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=False, index=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('meta.id'))
     image_file = db.Column(db.String(20), nullable=True)
     parent = db.relationship('Meta', primaryjoin=('Meta.parent_id==Meta.id'),remote_side=id, backref='subpost')
