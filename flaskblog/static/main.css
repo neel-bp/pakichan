@@ -1,7 +1,8 @@
 :root {
   --link-fg: #34345c;
   --link-hover: #d00;
-  --bg: #fafafa;
+  --bg: #eef2ff;
+  --bg-gradient: #D1D5EE;
   --fg: #333333;
   --post-bg: #d6daf0;
   --post-border: #b7c5d9;
@@ -12,6 +13,7 @@
 
 body {
   background: var(--bg);
+  background-image: linear-gradient(to bottom,var(--bg-gradient) 0,transparent 260px);
   color: var(--fg);
   margin-top: 5rem;
 }
