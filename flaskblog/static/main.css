@@ -1,7 +1,27 @@
+:root {
+  --link-fg: #34345c;
+  --link-hover: #d00;
+  --bg: #fafafa;
+  --fg: #333333;
+  --post-bg: #d6daf0;
+  --post-border: #b7c5d9;
+  --greentext-and-name: green;
+  --thread-title: blue;
+}
+
+
 body {
-  background: #fafafa;
-  color: #333333;
+  background: var(--bg);
+  color: var(--fg);
   margin-top: 5rem;
+}
+
+a:link, a:visited {
+  color: var(--link-fg);
+}
+
+a:hover {
+  color: var(--link-hover);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -97,12 +117,12 @@ a.article-title:hover {
 .name_thread {
 	font-size: 10pt;
 	font-weight: bold;
-	color: green;
+	color: var(--greentext-and-name);
 }
 .title_thread {
 	font-size: 10pt;
 	font-weight: bold;
-	color: blue;
+	color: var(--thread-title);
 }
 .date_thread {
 	font-size: 10pt;	
@@ -116,8 +136,8 @@ a.article-title:hover {
 }
 .post {
   display: block;
-  background-color: #d6daf0;
-	border: 5px solid #b7c5d9;
+  background-color: var(--post-bg);
+	border: 5px solid var(--post-border);
 	/* border-top: none;
   border-left: none; */
   margin-bottom: 5px;
@@ -144,7 +164,7 @@ a.article-title:hover {
 }
 
 .greentext {
-  color: green;
+  color: var(--greentext-and-name);
   white-space: normal;
 }
 
@@ -184,9 +204,9 @@ div.form-group > * {
  .dropdown-menu {
   font-size: 10pt;
   padding: 0px;
-  background-color: #d6daf0;
+  background-color: var(--post-bg);
   border-radius: 0px;
-  border-color: #b7c5d9;
+  border-color: var(--post-border);
 }
 .dropdown-item{
   padding: 2px 10px;
@@ -198,7 +218,7 @@ div.form-group > * {
 
 .navbar {
   padding: 3px 4px 4px !important;
-  background-color: #d6daf0;
+  background-color: var(--post-bg);
   font-size: 12px;
   box-shadow: -5px 1px 10px
     rgba(0, 0, 0, 0.20);
@@ -208,14 +228,14 @@ div.form-group > * {
 }
 
 a.nav-item.nav-link.py-0 {
-  color: #34345c;
+  color: var(--link-fg);
   font-size: 13px;
   font-weight: 500;
   padding: 2px; 
 }
 
 a.nav-item.nav-link.py-0:hover {
-  color: #d00;
+  color: var(--link-hover);
 }
 
 
