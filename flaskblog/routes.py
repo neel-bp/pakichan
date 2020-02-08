@@ -70,7 +70,7 @@ def home(boardname):
                     thread_n_posts.append(k)
                 posts.append(thread_n_posts)
 
-    return render_template('home.html', posts=posts, utcToLocal=utc_to_local, Len=len, allRegex=allRegex, form=form, title=boards[boardname], boardname=boardname)
+    return render_template('home.html', posts=posts, utcToLocal=utc_to_local, Len=len, allRegex=allRegex, form=form, title=boards[boardname], boardtitle=boards[boardname], boardname=boardname)
 
 
 @app.route("/about")
@@ -112,7 +112,7 @@ def post(boardname,post_id):
         if post.parent_id is not None:
             abort(404)
         subposts = board(boardname).query.filter(board(boardname).parent_id == thread_id).all()
-    return render_template('post.html', post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len, allRegex=allRegex, form=form, boardname=boardname, title=boards[boardname] + ' ' + post.title, post_replies=post_replies)
+    return render_template('post.html', post=post, subposts=subposts, utcToLocal=utc_to_local, Len=len, allRegex=allRegex, form=form, boardname=boardname, title=boards[boardname] + ' ' + post.title, boardtitle=boards[boardname], post_replies=post_replies)
 
 
 # @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
