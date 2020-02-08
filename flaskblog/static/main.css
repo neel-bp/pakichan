@@ -233,7 +233,7 @@ div.form-group > * {
     rgba(0, 0, 0, 0.20);
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-color: rgb(183, 197, 217);
+  border-color: var(--post-border);
 }
 
 a.nav-item.nav-link.py-0 {
