@@ -10,8 +10,15 @@
   --thread-title: blue;
 }
 
+/* gradient was not working properly when there were no threads on board this 100vh and overflow property fixes that */
+html {
+  min-height: 100vh;
+  overflow: auto;
+}
 
 body {
+  min-height: 100vh;
+  overflow: auto;
   background: var(--bg);
   background-image: linear-gradient(to bottom,var(--bg-gradient) 0,transparent 260px);
   color: var(--fg);
