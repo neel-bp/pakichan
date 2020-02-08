@@ -49,6 +49,7 @@
                         {{ form.content(class="form-control form-control-sm", placeholder="comment", rows="5") }}
                     {% endif %}
                     </div>
+                    <span id="counter"></span>
                     <div class="form-group">
                         {{ form.image(class="form-control-file") }}
                         {% if form.image.errors %}
@@ -74,6 +75,15 @@
       });
       });
     </script>
+
+<script>
+    var textarea = document.getElementById('content');
+    textarea.addEventListener("input", function(){
+      var maxlength = this.getAttribute("maxlength");
+      var currentLength = this.value.length;
+      document.getElementById('counter').innerHTML = currentLength;
+    });
+  </script>
 
     {% for post in posts %}
       {% for p in post %}
