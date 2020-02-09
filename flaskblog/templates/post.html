@@ -100,7 +100,7 @@
         </div>
       </small>
       {% for i in post_replies(boardname=boardname, thread_id=post.id, post_id=post.id) %}
-        <a href="#{{post.id}}"><small class="id_thread">>>{{i}}</small></a>
+        <a href="#{{i}}"><small class="id_thread">>>{{i}}</small></a>
       {% endfor %}
       <br>
 
@@ -127,7 +127,7 @@
         </div>
       </small>
       {% for i in post_replies(boardname=boardname, thread_id=post.id, post_id=subpost.id) %}
-        <a href="#{{post.id}}"><small class="id_thread">>>{{i}}</small></a>
+        <a href="#{{i}}"><small class="id_thread">>>{{i}}</small></a>
       {% endfor %}
       <br>
 
