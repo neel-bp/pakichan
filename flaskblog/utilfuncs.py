@@ -106,7 +106,7 @@ def bumpOrderThreshold(boardname):
 
 def post_replies(boardname, thread_id, post_id):
     li=[]
-    posts = get_class_by_tablename(boardname).query.filter(and_(get_class_by_tablename(boardname).parent_id == thread_id, get_class_by_tablename(boardname).content.ilike(f'>>%{post_id}%'))).all()
+    posts = get_class_by_tablename(boardname).query.filter(and_(get_class_by_tablename(boardname).parent_id == thread_id, get_class_by_tablename(boardname).content.ilike(f'%>>{post_id}%'))).all()
     for i in posts:
         li.append(i.id)
     return li
