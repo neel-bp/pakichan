@@ -1,7 +1,7 @@
 from flask import render_template, url_for, redirect, request, abort, flash, session
 from flaskblog import app, db, boards
 from flaskblog.forms import PostForm, SubPostForm
-from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, allRegex, moment, bumpOrderThreshold
+from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, allRegex, moment, bumpOrderThreshold, hrefregex
 from flaskblog.utilfuncs import get_class_by_tablename as board
 from flaskblog.utilfuncs import post_replies
 import os
@@ -22,9 +22,9 @@ def home(boardname):
                 ip = request.environ['REMOTE_ADDR']
                 image = thread_save_picture(form.image.data)
                 if form.name.data == '':
-                    post = board(boardname)(title=form.title.data, content=form.content.data,ip=ip, name='Anonymous',image_file=image)
+                    post = board(boardname)(title=form.title.data, content=hrefregex(form.content.data),ip=ip, name='Anonymous',image_file=image)
                 else:
-                    post = board(boardname)(title=form.title.data, content=form.content.data,ip=ip, name=form.name.data,image_file=image)
+                    post = board(boardname)(title=form.title.data, content=hrefregex(form.content.data),ip=ip, name=form.name.data,image_file=image)
                 db.session.add(post)
                 db.session.commit()
 
@@ -95,9 +95,9 @@ def post(boardname,post_id):
                     name = form.name.data
                 if form.image.data:
                     image = post_save_picture(form.image.data)
-                    subpost = board(boardname)(content=form.content.data, parent_id=post_id,ip=ip,name=name,image_file=image)
+                    subpost = board(boardname)(content=hrefregex(form.content.data), parent_id=post_id,ip=ip,name=name,image_file=image)
                 else:
-                    subpost = board(boardname)(content=form.content.data, parent_id=post_id,ip=ip,name=name,image_file='')
+                    subpost = board(boardname)(content=hrefregex(form.content.data), parent_id=post_id,ip=ip,name=name,image_file='')
                 db.session.add(subpost)
                 db.session.commit()
                 session.permanent = True
@@ -123,13 +123,13 @@ def post(boardname,post_id):
 #     form = PostForm()
 #     if form.validate_on_submit():
 #         post.title = form.title.data
-#         post.content = form.content.data
+#         post.content = hrefregex(form.content.data)
 #         db.session.commit()
 #         flash('Your post has been updated!', 'success')
 #         return redirect(url_for('post',boardname=boardname, post_id=post.id))
 #     elif request.method == 'GET':
 #         form.title.data = post.title
-#         form.content.data = post.content
+#         hrefregex(form.content.data) = post.content
 #     return render_template('create_post.html', title='Update Post',
 #                            form=form, legend='Update Post')
 
@@ -183,12 +183,12 @@ def delete_post(boardname, post_id):
 #         abort(403)
 #     form = SubPostForm()
 #     if form.validate_on_submit():
-#         subpost.content = form.content.data
+#         subpost.content = hrefregex(form.content.data)
 #         db.session.commit()
 #         flash('Your post has been updated!', 'success')
 #         return redirect(url_for('post',boardname=boardname, post_id=post.id))
 #     elif request.method == 'GET':
-#         form.content.data = subpost.content
+#         hrefregex(form.content.data) = subpost.content
 #     return render_template('create_subpost.html', title='Update SubPost',
 #                            form=form, legend='Update SubPost')
 
