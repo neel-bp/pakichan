@@ -27,16 +27,18 @@ def home(boardname):
                     post = board(boardname)(title=form.title.data, content=hrefregex(form.content.data),ip=ip, name=form.name.data,image_file=image)
                 db.session.add(post)
                 db.session.commit()
-
+                session.permanent = True
+                session['ip'] = ip
                 # content circulation
                 if bumpOrderThreshold(boardname) != 'maxLimitNotReached':
-                    leastactivethread = bumpOrderThreshold()
+                    leastactivethread = bumpOrderThreshold(boardname)
                     for i in board(boardname).query.filter(board(boardname).parent_id==leastactivethread.id).all():
-                        try:
-                            os.remove(os.path.join(app.root_path,'static','pics',i.image_file))
-                            os.remove(os.path.join(app.root_path,'static','thumbs',i.image_file[:len(i.image_file) - 4]))
-                        except FileNotFoundError:
-                            pass
+                        if i.image_file != '':
+                            try:
+                                os.remove(os.path.join(app.root_path,'static','pics',i.image_file))
+                                os.remove(os.path.join(app.root_path,'static','thumbs',i.image_file[:len(i.image_file) - 4]))
+                            except FileNotFoundError:
+                                pass
                     try:
                         os.remove(os.path.join(app.root_path,'static','pics',leastactivethread.image_file))
                         os.remove(os.path.join(app.root_path,'static','thumbs',leastactivethread.image_file[:len(leastactivethread.image_file) - 4]))
@@ -47,8 +49,6 @@ def home(boardname):
                     db.session.delete(leastactivethread)
                     db.session.commit()
 
-                session.permanent = True
-                session['ip'] = ip
                 return redirect(url_for('home',boardname=boardname))
         else:
             flash(str(form.errors).replace("'",'').replace('[','').replace(']','').replace('{','').replace('}','').replace('This','').replace(':',''),'postfailed')
