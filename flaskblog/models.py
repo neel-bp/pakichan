@@ -63,6 +63,15 @@ class Meta(db.Model):
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}, {self.id}, {self.parent_id}')"
 
+class CoolDown(db.Model):
+    __tablename__ = 'cooldown'
+    id = db.Column(db.Integer, primary_key=True)
+    ip = db.Column(db.String(100), nullable=True)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"CoolDown('{self.id}', '{self.ip}, {self.date_posted}')"
+
 # get model by tablename
 def get_class_by_tablename(tablename):
     for c in db.Model._decl_class_registry.values():

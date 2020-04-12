@@ -1,9 +1,11 @@
-from flask import render_template, url_for, redirect, request, abort, flash, session
+from flask import render_template, url_for, redirect, request, abort, flash
 from flaskblog import app, db, boards
 from flaskblog.forms import PostForm, SubPostForm
 from flaskblog.utilfuncs import utc_to_local, thread_save_picture, post_save_picture, do_clean, allRegex, moment, bumpOrderThreshold, hrefregex
 from flaskblog.utilfuncs import get_class_by_tablename as board
 from flaskblog.utilfuncs import post_replies
+from flaskblog.models import CoolDown
+import datetime
 import os
 
 @app.route("/", methods=['GET','POST'])
@@ -15,20 +17,24 @@ def home(boardname):
     form = PostForm(csrf_enabled=False)
     if request.method == 'POST':
         if form.validate():
-            if session.get('ip') is not None:
+            if bool(CoolDown.query.filter(CoolDown.ip == request.environ['REMOTE_ADDR']).first()) == True and datetime.datetime.utcnow() - CoolDown.query.filter(CoolDown.ip == request.environ['REMOTE_ADDR']).first().date_posted < datetime.timedelta(seconds=60):
                 flash('wait a minute before trying to post again, dummy', 'postfailed')
                 return redirect(url_for('home',boardname=boardname))
             else:
                 ip = request.environ['REMOTE_ADDR']
+                if bool(CoolDown.query.filter(CoolDown.ip == ip).first()) == True:
+                    cooldown_row = CoolDown.query.filter(CoolDown.ip == ip).first()
+                    db.session.delete(cooldown_row)
                 image = thread_save_picture(form.image.data)
                 if form.name.data == '':
                     post = board(boardname)(title=form.title.data, content=hrefregex(form.content.data),ip=ip, name='Anonymous',image_file=image)
                 else:
                     post = board(boardname)(title=form.title.data, content=hrefregex(form.content.data),ip=ip, name=form.name.data,image_file=image)
                 db.session.add(post)
+                cooldown = CoolDown(ip=ip)
+                db.session.add(cooldown)
                 db.session.commit()
-                session.permanent = True
-                session['ip'] = ip
+
                 # content circulation
                 if bumpOrderThreshold(boardname) != 'maxLimitNotReached':
                     leastactivethread = bumpOrderThreshold(boardname)
@@ -84,11 +90,14 @@ def post(boardname,post_id):
     form = SubPostForm(csrf_enabled=False)
     if request.method == 'POST':
         if form.validate():
-            if session.get('ip') is not None:
+            if bool(CoolDown.query.filter(CoolDown.ip == request.environ['REMOTE_ADDR']).first()) == True and datetime.datetime.utcnow() - CoolDown.query.filter(CoolDown.ip == request.environ['REMOTE_ADDR']).first().date_posted < datetime.timedelta(seconds=60):
                 flash('wait a minute before trying to post again, dummy', 'postfailed')
                 return redirect(url_for('post',boardname=boardname, post_id=redirectpostid))
             else:
                 ip = request.environ['REMOTE_ADDR']
+                if bool(CoolDown.query.filter(CoolDown.ip == ip).first()) == True:
+                    cooldown_r = CoolDown.query.filter(CoolDown.ip == ip).first()
+                    db.session.delete(cooldown_r)
                 if form.name.data == '':
                     name = 'Anonymous'
                 else:
@@ -99,9 +108,9 @@ def post(boardname,post_id):
                 else:
                     subpost = board(boardname)(content=hrefregex(form.content.data), parent_id=post_id,ip=ip,name=name,image_file='')
                 db.session.add(subpost)
+                cooldown1 = CoolDown(ip=ip)
+                db.session.add(cooldown1)
                 db.session.commit()
-                session.permanent = True
-                session['ip'] = ip
                 return redirect(url_for('post',boardname=boardname, post_id=redirectpostid))
         else:
             flash(str(form.errors).replace("'",'').replace('[','').replace(']','').replace('{','').replace('}','').replace('This','').replace(':',''),'postfailed')
