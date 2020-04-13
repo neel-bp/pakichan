@@ -15,4 +15,14 @@ mkdir venv
 python -m venv venv
 venv/scripts/activate
 pip install -r requirements.txt
-python run.py
+
+after above is all done and good
+start python in current directory and do this:
+
+from flaskblog import db
+db.drop_all()
+db.create_all()
+
+thats it you're done.
+now start the server by
+running run.py
