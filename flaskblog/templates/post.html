@@ -70,19 +70,7 @@
         document.getElementById('counter').innerHTML = currentLength;
       });
     </script>
-  {#
-  <article class="media content-section">
-    <div class="media-body">
-      <div class="article-metadata">
-        <span class="mr-2">No.{{ post.id }}</span>
-        <span class="mr-2">{{ post.name }}</span>
-        <small class="text-muted">{{ utcToLocal(post.date_posted).strftime('%d/%m/%y(%a)%H:%M:%S') }}</small>
-      </div>
-      <h2 class="article-title">{{ post.title }}</h2>
-      <p class="article-content">{{ post.content }}</p>
-    </div>
-  </article>
-  #}
+ 
   <article class="media thread">
     <a href="{{url_for('static', filename='pics/' + post.image_file)}}"><img class="px-2 py-2 image_thread" src="{{ url_for('static', filename='thumbs/' + post.image_file[:Len(post.image_file)-4]) }}"></a>
     <div class="thread-metadata">
