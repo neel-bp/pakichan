@@ -200,11 +200,11 @@ div.form-group > * {
 
 .spoiler{ 
   color: var(--spoiler-color); 
-  background-color: var(--spoiler-hover);
+  background-color: var(--spoiler-color);
 }
 
 .spoiler:hover{
-  color: white;
+  color: var(--spoiler-hover);
   }
 
 .alert-postfailed{
