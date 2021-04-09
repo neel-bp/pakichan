@@ -13,7 +13,9 @@ git clone https://github.com/neelu0/pakichan.git
 cd pakichan
 mkdir venv
 python -m venv venv
-venv/scripts/activate
+venv/scripts/activate or source venv/bin/activate if on linux
+
+-- make sure wheel is already installed before installing all the requirements
 pip install -r requirements.txt
 
 after above is all done and good
